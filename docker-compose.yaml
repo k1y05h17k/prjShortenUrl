@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   postgres-compose:
     image: postgres
     environment:
@@ -9,17 +8,19 @@ services:
     ports:
       - "5432:5432"
     volumes:
-    - "C:\\Users\\C0MPU74D0R\\Documents\\dev\\docker\\postgres:/var/lib/postgresql/data"    
+      - "C:\\Users\\C0MPU74D0R\\Documents\\dev\\docker\\postgres:/var/lib/postgresql/data"    
     
-    app:
-      image: node:18
-      working_dir: /usr/src/app
-      volumes:
-       - .:/usr/src/app
-      ports:
-       - "3000:3000"
-      environment:
-        MODE_ENV: development
-      depends_on:
-        -postgres-compose
-      command: sh -c "npm install && npm run dev";  
+  app:
+    image: node:18
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - ./config.env:/usr/src/app/.env 
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      DB_HOST: localhost
+    depends_on:
+      - postgres-compose
+    command: sh -c "npm install && npm run dev"
